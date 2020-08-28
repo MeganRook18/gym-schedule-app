@@ -1,0 +1,29 @@
+# Project
+.idea
+.vscode
+
+# Node
+node_modules
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+## Mac
+.DS_Store
+
+# Package Managers
+yarn-error.log
+npm-debug.log
+
+# Build
+build
+vendor/*-manifest.json
+
+# Docs
+gh-pages
