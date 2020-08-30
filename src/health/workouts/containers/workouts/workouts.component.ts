@@ -33,7 +33,7 @@ import {
         <list-item
           *ngFor="let workout of workouts"
           [item]="workout"
-          (removed)="removeWorkout($event)"
+          (remove)="removeWorkout($event)"
         >
         </list-item>
       </div>

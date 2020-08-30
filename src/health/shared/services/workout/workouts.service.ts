@@ -1,19 +1,19 @@
 import { Injectable } from "@angular/core";
 import { AngularFireDatabase } from "angularfire2/database";
 
+import { Store } from "store";
+
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/do";
-import "rxjs/add/operator/map";
 import "rxjs/add/operator/filter";
+import "rxjs/add/operator/map";
 import "rxjs/add/observable/of";
-
-import { Store } from "store";
 
 import { AuthService } from "../../../../auth/shared/services/auth/auth.service";
 
 export interface Workout {
   name?: string;
-  type?: string; // endurance | strength
+  type?: string;
   strength?: any;
   endurance?: any;
   timestamp?: number;
@@ -23,7 +23,7 @@ export interface Workout {
 
 @Injectable()
 export class WorkoutsService {
-  public workouts$: Observable<any> = this.db
+  workouts$: Observable<any> = this.db
     .list(`workouts/${this.uid}`)
     .do((next) => this.store.set("workouts", next));
 
@@ -37,6 +37,16 @@ export class WorkoutsService {
     return this.authService.user.uid;
   }
 
+  getWorkout(key: string): Observable<Workout> {
+    if (!key) return Observable.of({});
+    return this.store
+      .select<Workout[]>("workouts")
+      .filter(Boolean)
+      .map((workouts: Workout[]) =>
+        workouts.find((workout: Workout) => workout.$key === key)
+      );
+  }
+
   addWorkout(workout: Workout) {
     return this.db.list(`workouts/${this.uid}`).push(workout);
   }
@@ -47,15 +57,5 @@ export class WorkoutsService {
 
   removeWorkout(key: string) {
     return this.db.list(`workouts/${this.uid}`).remove(key);
-  }
-
-  getWorkout(key: string): Observable<Workout> {
-    if (!key) return Observable.of({});
-    return this.store
-      .select<Workout[]>("workouts")
-      .filter(Boolean)
-      .map((workouts: Workout[]) =>
-        workouts.find((workout: Workout) => workout.$key === key)
-      );
   }
 }
